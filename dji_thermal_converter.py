@@ -6,12 +6,43 @@ import subprocess
 import logging
 from tqdm import tqdm
 import warnings
+import argparse
+import sys
 warnings.filterwarnings("ignore")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
+def parse_arguments():
+    """
+    Parse command-line arguments for input and output directories.
+    Usage:
+        python dji_thermal_converter.py
+        python dji_thermal_converter.py <input_dir>
+        python dji_thermal_converter.py <input_dir> <output_dir>
+    """
+    parser = argparse.ArgumentParser(
+            description="Convert DJI thermal JPG images to georeferenced TIFFs."
+    )
+    parser.add_argument("input_dir", nargs="?", default="input_images",
+         help="Input directory containing thermal JPGs (default: input_images)"
+    )
+    parser.add_argument("output_dir", nargs="?", default=None,
+        help="Output directory for converted TIFFs (default: output_images or subfolder in input_dir)"
+    )
+    args = parser.parse_args()
+
+    input_folder = os.path.abspath(args.input_dir)
+    if args.output_dir:
+        output_folder = os.path.abspath(args.output_dir)
+    else:
+        if args.input_dir == "input_images":
+            output_folder = os.path.abspath("output_images")
+        else:
+            output_folder = os.path.join(input_folder, "output_images")
+
+    return input_folder, output_folder
 
 def main():
     """
@@ -32,11 +63,13 @@ def main():
         3. Move TIFF files to the output folder.
         4. Delete temporary files.
     """
-    input_folder = 'input_images'
-    output_folder = 'output_images'
+    input_folder, output_folder = parse_arguments()
     
     # Ensure output folder exists
     os.makedirs(output_folder, exist_ok=True)
+
+    logging.info(f"Input folder: {input_folder}")
+    logging.info(f"Output folder: {output_folder}")
     
     # List input files
     input_files = [file for file in os.listdir(input_folder) 
