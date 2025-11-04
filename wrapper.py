@@ -30,7 +30,7 @@ def main(folders):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python wrapper.py <folder1> <folder2> ...")
+        logging.error("Usage: python wrapper.py <folder1> <folder2> ...")
         sys.exit(1)
 
     # sys.argv[1:] contains all folders passed on the command line
