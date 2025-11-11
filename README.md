@@ -13,7 +13,7 @@ This repository contains a Python script that converts thermal JPEG images captu
 
 ## Requirements
 - `DJI Thermal SDK` (not included in repository)
-- `exiftool` (included in the repository, consider downloading hte latest version)
+- `exiftool` (included in the repository, consider downloading the latest version)
 - Python 3.11.x or later
 - The following Python libraries:
   - `rasterio`
@@ -29,7 +29,7 @@ This repository contains a Python script that converts thermal JPEG images captu
     ```
 2. **Create a virtual environment:**
 
-   - Create a new environment with Python 3.12.4:
+   - Create a new environment with Python 3.12.4 or later:
    ```sh
     conda create --name thermConv python=3.12.4
    ```
@@ -51,8 +51,31 @@ This repository contains a Python script that converts thermal JPEG images captu
     pip install tqdm
    ```
 
-4. **Make sure `exiftool.exe` is in the root directory:**
-    - You can download `exiftool` from [here](https://exiftool.org/).
+4. **Make sure ExiTool is available to your computer:**
+You can download `exiftool` from [here](https://exiftool.org/) (recommended) or use the zipped version in `tools\exiftool-13.40_64` as fallback. After download or extraction, it should look like this:
+    ```
+    exiftool-version_64/
+    ├── exiftool_files/
+    ├── exiftool.exe (you might have to remane it from exiftool(-k).exe to exiftool.exe)
+    └── README.txt
+    ```
+
+You can place `exiftool` either in a general location of your computer (recommended) or in the root directory of the repository:
+
+- To run exiftool from a general location, place place the `exiftool` folder in a location such as `C:\Users\username\exiftool-version_64` or (if you have admin permissions) in your program files `C:\Program Files\exiftool-version_64`. Make sure to add the `exiftool` folder in your path variables (Windows Key -> Edit environment variables -> Path -> Edit, where you add the location, e.g. `%USERPROFILE%\exiftool-version_64` or `C:\Program Files\exiftool-version_64`).
+
+- Alternatively, you can place the `exiftool_files/` folder and the `exiftool.exe` directly in the root directory of the repository. Be aware that this will add roughly 40 MB storage space to your repository. You can avoid this by adjusting the `.gitignore` file to exclude `exiftool_files/*` and `exiftool.exe*`.
+
+To test the installation, run from the project root:
+    ```sh
+    exiftool
+    ```
+Which should display the documentation of `exiftool`. Press `q` to exit.
+To see where the exiftool is located, use:
+    ```sh
+    where exiftool
+    ```
+
 
 5. **Download `DJI Thermal SDK` and place its files in `dji_thermal_sdk` folder:**
     - You can download `DJI Thermal SDK` from [here](https://www.dji.com/global/downloads/softwares/dji-thermal-sdk).
@@ -69,11 +92,12 @@ This repository contains a Python script that converts thermal JPEG images captu
       ├── License.txt
       └── Readme.md
       ```
+      Place it in the root directory.
 
 ## Usage
 This is the most basic workflow:
 1. **Prepare your input images:**
-    - Place all thermal JPEG images (with `_T.JPG` suffix) in the `input_images` folder.
+    - Place all thermal JPEG images (with `_T.JPG` suffix) in the `input_images` folder, create if required.
 
 2. **Run the script:**
     ```sh
@@ -109,6 +133,12 @@ If you have many directories to process, you can use the `wrapper.py` script and
 
 2. **Find your converted images:**
     - The converted TIFF images will be saved in the `outputfiles` folder for each speciefied directory.
+
+The script `sort_images.py` is useful when you have a folder with hundreds of both Thermal JPG files (`*_T.JPG`) and Wide angle RGB files (`*_W.JPG`) and you want to sort them in separate folders:
+
+    ```sh
+    python sort_images.py path\to\folder\you\want\to\sort
+    ```
 
 ## Example
 Here's an example of how to use the script:
